@@ -1,6 +1,10 @@
 var mouse;
 var count = 0;
 var timePos;
+var secondsOnFirstDraw = 0;
+var secondsCaptured = false;
+var offsetSet = false;
+var offset = 0;
 
 function setup() {
     createCanvas(400, 400);
@@ -22,7 +26,7 @@ function setup() {
     ]
 }
 
-function draw() {
+function draw() {	
     background(0);
     count += 1;
     mouse = {
@@ -43,14 +47,29 @@ function draw() {
     ellipse(0, 0, 300);
 
     // Arcs drawing
-    let secAng = map(second(), 0, 60, 0, 360);
-    let millisAng = map(millis(), 0, 100000, 0, 360);
+	var seconds = second();
+    
+    if (!secondsCaptured) {
+        secondsOnFirstDraw = seconds;
+        secondsCaptured = true
+    } else if(!offsetSet) {
+        if(secondsOnFirstDraw !== seconds) {
+            var currentMillis = seconds * 1000;
+            var sketchStartMillis = millis();
+            offset = sketchStartMillis - currentMillis;
+            offsetSet = true;
+        }
+    }
+
+    let secAng = map(seconds, 0, 60, 0, 360);
+	var millisVal = ((millis() - offset) % 60000) % 1000;	
+    let millisAng = map(seconds * 1000 + millisVal, 0, 60000, 0, 360);
     stroke("red");
     arc(0, 0, 280, 280, 0, secAng);
     stroke("lightblue");
     push();
     strokeWeight(25.345);
-    arc(0, 0, 340, 340, 0, millisAng * 10);
+    arc(0, 0, 340, 340, 0, millisAng);
     pop();
 
     let minAng = 1;
