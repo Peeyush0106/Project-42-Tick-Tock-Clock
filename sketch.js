@@ -1,6 +1,13 @@
 var mouse;
 var count = 0;
 var timePos;
+// Clock sound
+var tick;
+var prevSec;
+
+function preload() {
+    tick = loadSound("tick.mp3");
+}
 
 function setup() {
     createCanvas(400, 400);
@@ -19,10 +26,11 @@ function setup() {
         { x: 45, y: 115 },
         { x: 110, y: 60 },
         { x: 185, y: 40 },
-    ]
+    ];
+    prevSec = -1;
 }
 
-function draw() {	
+function draw() {
     background(0);
     count += 1;
     mouse = {
@@ -48,7 +56,7 @@ function draw() {
     pop();
 
     // Arcs drawing    
-    let secAng = map(second(), 0, 60, 0, 360);	
+    let secAng = map(second(), 0, 60, 0, 360);
     stroke("red");
     arc(0, 0, 280, 280, 0, secAng);
 
@@ -106,6 +114,7 @@ function draw() {
     }
     pop();
     showDigitalTime();
+    playTickSoundEverySecond();
 }
 
 function showDigitalTime() {
@@ -124,4 +133,17 @@ function showDigitalTime() {
     fill("yellow");
     textSize(22);
     text(hourTime + ":" + minuteTime + ":" + secondTime, 156, 250);
+}
+
+function playTickSoundEverySecond() {
+    if (prevSec !== second()) {
+        tick.play();
+        prevSec = second();
+    }
+    if (second() % 5 === 0) {
+        tick.setVolume(1);
+    }
+    else {
+        tick.setVolume(0.3);
+    }
 }
