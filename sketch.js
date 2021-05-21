@@ -112,6 +112,7 @@ function showDigitalTime() {
     // Setting all the values of hour, minute, and seconds
     var hourTime, minuteTime, secondTime
     if (hour() > 12) hourTime = hour() % 12
+    else hourTime = hour();
     minuteTime = minute();
     secondTime = second();
 
